@@ -14,6 +14,32 @@ A project by Arjun Manjunatha Rao (arjunman) and Shreyas Belur Sampath (sbelursa
 
 # Project Proposal
 
+## Summary
+
+We intend to implement parallel versions of popularly used cryptographic algorithms including but not limited to AES, ChaCha, and Elliptical curve cryptographic algorithms. With their wide adoption in almost every real world application and computationally intensive mathematical operations and high throughput requirement, parallel implementations in order to improve performance, scalability, utilization, and resistance to attacks becomes cardinal. For each algorithm we explore, we intend to understand the most suited parallelization technique out of SIMD, thread-level parallelism using OpenMP, data parallelism using CUDA, and distributed computing using MPI and create a library with efficient parallel implementations of cryptographic algorithms in C++.
+
+## Background
+
+The great progress in processor speeds over the years have helped us advance in many ways; fields such as Machine Learning have become popular now that processors can finally deliver enough compute to run these algorithms on scale but it also made some of the systems we design vulnerable. Some algorithms we aim to parallelize due to their ubiquitous use and scope for parallelism include AES, ChaCha, and ECC algorithms.
+AES or Advanced Encryption standard is a block cipher that involves a series of operations including substitution, permutation, and XOR operations. ChaCha is a stream cipher that involves a series of addition, rotation, and XOR operations. Elliptical Curve Cryptography or ECC involves operations such as scalar multiplication, point addition, and point doubling. 
+
+### *Parallelizing cryptographic algorithms*
+In AES and Chacha, we hope to effectively leverage SIMD instructions in order to parallelize substitution and permutation operations. While the XOR operation may benefit from thread-level parallelism as in OpenMP or data parallel execution on GPUs using CUDA. Finally, in ECC, scalar multiplication is the most computationally expensive operation and we hope to parallelize these using SIMD instructions, OpenMP, or CUDA depending on best performance observed. Scope for parallelizing point addition and point doubling operations will also be explored using SIMD and OpenMP.
+
+## The Challenge
+
+Considering AES, the potential challenges may include the following: 
+* Data dependence of mathematical operations
+* Memory access conflicts
+* Workload imbalance among the different parallel components
+* Side-channel attacks may be introduced along with new security vulnerabilities
+
+For ChaCha on the other hand, the following may pose to be a challenge in addition to the above stated ones:
+* Different branching instructions and diverging paths may impact parallel performance
+Finally, considering ECC, additional challenges may include:
+* Variable length operations may not be effectively batched for parallelism
+* Communication overhead may be unavoidable while using distributed systems for performance
+
 ## Resources
 
 We plan to use the GPUs and CPUs on the GHC machines, and both the GPU and regular memory nodes on Bridges-2, PSC's (Pittsburgh Supercomputing Center's) flagship supercomputer. 
