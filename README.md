@@ -1,3 +1,5 @@
+A project by Arjun Manjunatha Rao (arjunman) and Shreyas Belur Sampath (sbelursa)
+
 * [Project Proposal](#project-proposal)
     * [Summary](#summary)
     * [Background](#background)
@@ -16,7 +18,7 @@
 
 We plan to use the GPUs and CPUs on the GHC machines, and both the GPU and regular memory nodes on Bridges-2, PSC's (Pittsburgh Supercomputing Center's) flagship supercomputer. 
 
-We will explore the existing sequential implementations of the cryptographic algorithms and identify avenues of parallelism, following which we will implement multiple parallel versions of the algorithms, on frameworks like OpenMP, OpenMPI, CUDA and using techniques like SIMD.
+We will explore/implement sequential versions of the cryptographic algorithms and identify avenues of parallelism, following which we will implement multiple parallel versions of the algorithms, on frameworks like OpenMP, OpenMPI, CUDA and using techniques like SIMD.
 
 We will also study the necessary background through textbooks and handbooks, including but not limited to:
 * Basics of Cryptography lectures by Christof Paar
@@ -27,7 +29,9 @@ We will also study the necessary background through textbooks and handbooks, inc
 
 ### *Plan to Achieve*
 
-We will construct a library with parallel versions of existing sequential implementations of primarily two cryptographic algorithms, AES and ChaCha20. For both the AES and ChaCha20 algorithms, we will work on parallelizing the independently computed blocks using atleast 2 framworks and techniques mentioned above. A combination of the parallelization techniques will also be explored. For implemntations using CUDA, we will test and study their performances on the GPUs of both the machine types.
+We will construct a library with parallel versions of existing sequential implementations of primarily two cryptographic algorithms, AES and ChaCha20. In the case we do not find a satisfactory sequential version, we will implement our own version following the steps detailed for the algorithm. 
+
+For both the AES and ChaCha20 algorithms, we will work on parallelizing the independently computed blocks using atleast 2 framworks and techniques mentioned above. A combination of the parallelization techniques will also be explored. For implementations using CUDA, we will test and study their performances on the GPUs of both the machine types.
 
 ### *Hope to Achieve*
 
