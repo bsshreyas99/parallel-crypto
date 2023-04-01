@@ -75,8 +75,8 @@ Since our project focusses on parallelizing cryptographic algorithms and also st
 
 * Week 1 (03/31): Complete project proposal and finalize parallelism frameworks. Explore/implement sequential versions of cryptographic algorithms.
 * Week 2 (04/07): Identify sequential bottlenecks and parallelize AES using OpenMP, OpenMPI and CUDA.
-* Week 3 (04/14): Identify sequential bottlenecks and parallelize ChaCha20 using OpenMP, OpenMPI and CUDA.
-* Week 4 (04/21): Identify sequential bottlenecks and parallelize ECDSA using OpenMP, OpenMPI and CUDA. Milestone report.
-* Week 5 (04/28): Benchmark report and performance analyses.
-* Week 6 (05/04): Final report and poster.
+* Week 3 (04/14): Identify sequential bottlenecks and parallelize ChaCha20 using OpenMP, OpenMPI and CUDA. Milestone report.
+* Week 4 (04/21): Identify sequential bottlenecks and parallelize ECDSA using OpenMP, OpenMPI and CUDA. 
+* Week 5 (04/28): Benchmark report and performance analyses. Final report and poster.
+
 
