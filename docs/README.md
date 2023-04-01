@@ -57,7 +57,7 @@ We will also study the necessary background through textbooks and handbooks, inc
 
 We will construct a library with parallel versions of existing sequential implementations of primarily two cryptographic algorithms, AES and ChaCha20. In the case we do not find a satisfactory sequential version, we will implement our own version following the steps detailed for the algorithm. 
 
-For both the AES and ChaCha20 algorithms, we will work on parallelizing the independently computed blocks using atleast 2 framworks and techniques mentioned above. A combination of the parallelization techniques will also be explored. For implementations using CUDA, we will test and study their performances on the GPUs of both the machine types.
+For both the AES and ChaCha20 algorithms, we will work on parallelizing the independently computed blocks using atleast 2 frameworks and techniques mentioned above. A combination of the parallelization techniques will also be explored. For implementations using CUDA, we will test and study their performances on the GPUs of both the machine types.
 
 ### *Hope to Achieve*
 
@@ -65,8 +65,18 @@ We also hope to implement a parallel version of the Elliptic Curve Digital Signa
 
 ### *Deliverables*
 
-Our deliverables will mainly include speedup graphs across the different frameworks coupled with the analyses of their performances using quantitative metrics. Since we will be evaluating the performance on the GHC and Bridges-2 machines, a benchmark report will also be included. Finally, we will expose the suite of parallel cryptographic algorithms we implement on C++ for public usage.
+Our deliverables will mainly comprise of speedup graphs across the different frameworks coupled with the analyses of their performances using quantitative metrics. Since we will be evaluating the performance on the GHC and Bridges-2 machines, a benchmark report will also be included. Finally, we will expose the suite of parallel cryptographic algorithms we implement on C++ for public usage.
 
 ## Platform Choice
 
 Since our project focusses on parallelizing cryptographic algorithms and also studying their performance across parallel frameworks, we will use OpenMP, CUDA and OpenMPI. We will use C++ as the implementation language due to its compatibility with all the frameworks mentioned and the fine-grained control of memory that it provides.
+
+## Schedule
+
+* Week 1 (03/31): Complete project proposal and finalize parallelism frameworks. Explore/implement sequential versions of cryptographic algorithms.
+* Week 2 (04/07): Identify sequential bottlenecks and parallelize AES using OpenMP, OpenMPI and CUDA.
+* Week 3 (04/14): Identify sequential bottlenecks and parallelize ChaCha20 using OpenMP, OpenMPI and CUDA.
+* Week 4 (04/21): Identify sequential bottlenecks and parallelize ECDSA using OpenMP, OpenMPI and CUDA. Milestone report.
+* Week 5 (04/28): Benchmark report and performance analyses.
+* Week 6 (05/04): Final report and poster.
+
