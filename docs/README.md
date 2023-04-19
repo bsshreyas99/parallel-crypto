@@ -79,4 +79,32 @@ Since our project focusses on parallelizing cryptographic algorithms and also st
 * Week 4 (04/21): Identify sequential bottlenecks and parallelize ECDSA using OpenMP, OpenMPI and CUDA. 
 * Week 5 (04/28): Benchmark report and performance analyses. Final report and poster.
 
+# Milestone Report
 
+## Milestone Summary
+
+We have conducted a comprehensive analysis of the existing sequential implementations of the ChaCha and AES algorithms. Initially, our focus was centered on utilizing Botan, a C++ cryptography library, as our baseline. However, as these algorithms already contain some degree of parallelism in the form of SIMD and AVX vector instructions, we desired to explore alternative avenues of parallelization and concentrated solely on the algorithms themselves.
+
+For the ChaCha algorithm, we selected an implementation developed by Ginurx to serve as our sequential baseline reference. Given that existing implementations employ optimizations such as loop unrolling, we developed our own sequential version to comprehend the performance improvements that could be gained through parallelism. The ChaCha algorithm is primarily comprised of a key expansion phase, in which a 256-bit key is padded with predetermined constants, a nonce, and a block number. The expanded key is subsequently permuted through rounds that feature a series of XOR, addition, and rotation operations. We have identified that the quarter round phases - the crux of each round phase - can be parallelized by harnessing OpenMP's thread-level parallelism to achieve optimal performance.
+
+In a similar vein, we adopted a comparable approach for the AES algorithm, which has a similar structure to the ChaCha algorithm. However, the AES algorithm entails matrix multiplications to permute the columns, which can be parallelized by executing the operations on GPUs using the cuBLAS library - a highly optimized matrix multiplication library.
+
+
+## Updates to Goals and Deliverables
+
+Up to this point, we have understood the cryptographic algorithms in question, and have successfully produced their sequential versions, whilst simultaneously pinpointing areas of potential parallelism. Regrettably, due to the substantial amount of time invested in comprehending the reference implementations, we have been unable to implement the parallelizations as mentioned in the previously defined schedule. As a consequence, the parallelization of ECDSA may not be realizable within the designated timeframe of this project. Despite this setback, we will explore alternative avenues of parallelization, such as message encryption batching and kernel composition for AES and ChaCha and we remain confident in our ability to fulfill our planned objectives and analyses. 
+
+
+## Deliverables for the Final Presentation
+
+We will be displaying speedup graphs across the different frameworks coupled with a detailed analyses of their performances using quantitative metrics. 
+
+
+## Half-Weekly Schedule
+
+| Due Date | Task | Assignee |
+|----------|------|----------|
+| April 22 | AES and ChaCha parallelization using ISPC | Shreyas, Arjun |
+| April 26 | AES and ChaCha parallelization using CUDA  | Shreyas, Arjun |
+| April 30 | AES and ChaCha parallelization using OpenMP | Shreyas, Arjun |
+| May 4 | Final report and poster | Shreyas, Arjun |
