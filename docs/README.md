@@ -104,7 +104,11 @@ We will be displaying speedup graphs across the different frameworks coupled wit
 
 | Due Date | Task | Assignee |
 |----------|------|----------|
-| April 22 | AES and ChaCha parallelization using ISPC | Shreyas, Arjun |
-| April 26 | AES and ChaCha parallelization using CUDA  | Shreyas, Arjun |
-| April 30 | AES and ChaCha parallelization using OpenMP | Shreyas, Arjun |
-| May 4 | Final report and poster | Shreyas, Arjun |
+| April 22 | AES parallelization using ISPC | Shreyas |
+| April 22 | ChaCha parallelization using ISPC | Arjun |
+| April 26 | AES parallelization using CUDA  | Shreyas |
+| April 26 | ChaCha parallelization using CUDA  | Arjun |
+| April 30 | AES parallelization using OpenMP | Shreyas |
+| April 30 | ChaCha parallelization using OpenMP | Arjun |
+| May 4 | Final report | Shreyas |
+| May 4 | Poster | Arjun |
