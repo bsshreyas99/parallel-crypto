@@ -161,12 +161,12 @@ int main() {
     
     int num_repeats = target_len / data_len;
     for (int i = 0; i < num_repeats; i++) {
-        std::memcpy(&output[i * data_len], data, data_len);
+        memcpy(&output[i * data_len], data, data_len);
     }
 
     int remaining_len = target_len % data_len;
     if (remaining_len > 0) {
-        std::memcpy(&output[num_repeats * data_len], data, remaining_len);
+        memcpy(&output[num_repeats * data_len], data, remaining_len);
     }
 
 	uint8_t *buffer = output;

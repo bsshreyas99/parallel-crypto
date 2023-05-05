@@ -317,8 +317,8 @@ void aes_main(unsigned char *state, unsigned char *expandedKey, int nbrRounds)
     addRoundKey(state, roundKey);
 
     unsigned char roundKeys[nbrRounds][16];
-    // omp_set_num_threads(nbrRounds);
-    // #pragma omp parallel for
+    omp_set_num_threads(nbrRounds);
+    #pragma omp parallel for
     for (int i = 1; i < nbrRounds; i++)
         createRoundKey(expandedKey + 16 * i, roundKeys[i-1]);
 
