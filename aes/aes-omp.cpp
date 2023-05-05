@@ -317,8 +317,8 @@ void aes_main(unsigned char *state, unsigned char *expandedKey, int nbrRounds)
     addRoundKey(state, roundKey);
 
     unsigned char roundKeys[nbrRounds][16];
-    // omp_set_num_threads(nbrRounds);
-    // #pragma omp parallel for
+    omp_set_num_threads(nbrRounds);
+    //#pragma omp parallel for
     for (int i = 1; i < nbrRounds; i++)
         createRoundKey(expandedKey + 16 * i, roundKeys[i-1]);
 
@@ -334,7 +334,9 @@ void aes_main(unsigned char *state, unsigned char *expandedKey, int nbrRounds)
 char aes_encrypt(unsigned char *input,
                  unsigned char *output,
                  unsigned char *key,
-                 enum keySize size)
+                 enum keySize size,
+                 int num_msgs,
+                 int msg_length)
 {
     /* the expanded keySize */
     int expandedKeySize;
@@ -389,20 +391,22 @@ char aes_encrypt(unsigned char *input,
     start = std::chrono::high_resolution_clock::now();
     omp_set_num_threads(NUM_BLOCKS);
     #pragma omp parallel for
-    for(int block_number = 0; block_number < NUM_BLOCKS; block_number++) {
-        unsigned char block[16];
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
-                block[(i + (j * 4))] = input[(16 * block_number) + (i * 4) + j];
-        }
+    for(int msg = 0; msg < num_msgs; msg++) {
+        for(int block_number = 0; block_number < NUM_BLOCKS; block_number++) {
+            unsigned char block[16];
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                    block[(i + (j * 4))] = input[(msg * msg_length) + (16 * block_number) + (i * 4) + j];
+            }
 
-        aes_main(block, expandedKey, nbrRounds);
+            aes_main(block, expandedKey, nbrRounds);
 
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++) {
-                output[(16 * block_number) + (i * 4) + j] = block[(i + (j * 4))];
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++) {
+                    output[(msg * msg_length) + (16 * block_number) + (i * 4) + j] = block[(i + (j * 4))];
+                }
             }
         }
     }
@@ -431,12 +435,15 @@ int main(int argc, char *argv[])
 
     // the plaintext
     int msg_length = 64;
-    unsigned char plaintext[msg_length];
-    for(int i=0;i<(msg_length);i++)
-        plaintext[i] = '0' + (i % 10);
+    int num_msgs = 64;
+    unsigned char plaintext[num_msgs*msg_length];
+    for(int i = 0; i < num_msgs; i++) {
+        for(int j = 0; j < (msg_length); j++)
+            plaintext[i * msg_length + j] = '0' + (j % 10);
+    }
 
     // the ciphertext
-    unsigned char ciphertext[msg_length];
+    unsigned char ciphertext[num_msgs*msg_length];
 
     // the decrypted text
     //unsigned char decryptedtext[16];
@@ -467,7 +474,7 @@ int main(int argc, char *argv[])
     }
 
     // AES Encryption
-    aes_encrypt(plaintext, ciphertext, key, SIZE_16);
+    aes_encrypt(plaintext, ciphertext, key, SIZE_16, num_msgs, msg_length);
 
     printf("\nCiphertext:\n");
     for (i = 0; i < msg_length; i++)
