@@ -286,6 +286,7 @@ __device__ void createRoundKey(unsigned char *expandedKey, unsigned char *roundK
 __global__ void aes_main(unsigned char *input, unsigned char *output, unsigned char *expandedKey, int nbrRounds, unsigned char *sbox, int msg_length)
 {
     int id = threadIdx.x;
+    int blockId = blockIdx.x;
 
     __shared__ unsigned char d_sbox[256];
     __shared__ unsigned char d_expandedKey[176];
@@ -307,7 +308,7 @@ __global__ void aes_main(unsigned char *input, unsigned char *output, unsigned c
         for (i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
-                state[(i + (j * 4))] = input[(16 * id) + ((i * 4) + j)];
+                state[(i + (j * 4))] = input[(blockId * msg_length) + (16 * id) + ((i * 4) + j)];
         }
 
         i = 0;
@@ -330,7 +331,7 @@ __global__ void aes_main(unsigned char *input, unsigned char *output, unsigned c
         for (i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
-                output[(16 * id) + ((i * 4) + j)] = state[(i + (j * 4))];
+                output[(blockId * msg_length) + (16 * id) + ((i * 4) + j)] = state[(i + (j * 4))];
         }
     }
 }
@@ -339,6 +340,7 @@ char aes_encrypt(unsigned char *input,
                  unsigned char *output,
                  unsigned char *key,
                  enum keySize size,
+                 int num_msgs,
                  int msg_length)
 {
 
@@ -350,9 +352,9 @@ char aes_encrypt(unsigned char *input,
     cudaMalloc((void **) &d_sbox, 256);
     cudaMemcpy(d_sbox, sbox, 256, cudaMemcpyHostToDevice);
 
-    cudaMalloc((void **) &d_input, msg_length);
-    cudaMalloc((void **) &d_output, msg_length);
-    cudaMemcpy(d_input, input, msg_length, cudaMemcpyHostToDevice);
+    cudaMalloc((void **) &d_input, num_msgs*msg_length);
+    cudaMalloc((void **) &d_output, num_msgs*msg_length);
+    cudaMemcpy(d_input, input, num_msgs*msg_length, cudaMemcpyHostToDevice);
 
     /* the expanded keySize */
     int expandedKeySize;
@@ -407,7 +409,7 @@ char aes_encrypt(unsigned char *input,
     cudaEventCreate(&stop);
     cudaEventRecord(start, 0);
 
-    aes_main<<<1, 1024>>>(d_input, d_output, d_expandedKey, nbrRounds, d_sbox, msg_length);
+    aes_main<<<num_msgs, 1024>>>(d_input, d_output, d_expandedKey, nbrRounds, d_sbox, msg_length);
     cudaDeviceSynchronize();
 
     cudaEventRecord(stop, 0);
@@ -416,7 +418,14 @@ char aes_encrypt(unsigned char *input,
 
     printf("Time taken by encrypt on GPU:  %10.6f microseconds \n", time*1000);
 
-    cudaMemcpy(output, d_output, msg_length, cudaMemcpyDeviceToHost);
+    cudaEventRecord(start, 0);
+    cudaMemcpy(output, d_output, num_msgs*msg_length, cudaMemcpyDeviceToHost);
+
+    cudaEventRecord(stop, 0);
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time, start, stop);
+
+    printf("Time taken by CUDA memcpy:  %10.6f microseconds \n", time*1000);
 
     return 0;
 }
@@ -428,15 +437,18 @@ int main(int argc, char *argv[])
 
     // the plaintext
     int msg_length = 64;
-    unsigned char plaintext[msg_length];
-    for(int i=0; i<msg_length; i++)
-        plaintext[i] = '0' + (i % 10);
+    int num_msgs = 64;
+    unsigned char plaintext[num_msgs*msg_length];
+    for(int i = 0; i < num_msgs; i++) {
+        for(int j = 0; j < (msg_length); j++)
+            plaintext[i * msg_length + j] = '0' + (j % 10);
+    }
 
     // the ciphertext
-    unsigned char ciphertext[msg_length];
+    unsigned char ciphertext[num_msgs*msg_length];
 
     // the decrypted text
-    unsigned char decryptedtext[msg_length];
+    // unsigned char decryptedtext[msg_length];
 
     int i;
 
@@ -453,10 +465,10 @@ int main(int argc, char *argv[])
     }
 
     // AES Encryption
-    aes_encrypt(plaintext, ciphertext, key, SIZE_16, msg_length);
+    aes_encrypt(plaintext, ciphertext, key, SIZE_16, num_msgs, msg_length);
 
     printf("\nCiphertext:\n");
-    for (i = 0; i < msg_length; i++)
+    for (i = msg_length; i < 2*msg_length; i++)
     {
         printf("%2.2x%c", ciphertext[i], ((i + 1) % 16) ? ' ' : '\n');
     }
